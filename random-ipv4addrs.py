@@ -15,5 +15,5 @@ args = parser.parse_args()
 # TODO: verify we have an integer in the input
 
 for i in range(0, args.c):
-    randnum = random.randint(0,2**32-1)
+    randnum = int(random.random() * (2**32-1))
     print long2ipv4addr(randnum)
