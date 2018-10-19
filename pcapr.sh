@@ -16,16 +16,18 @@
 #set -x
 
 usage() {
-    echo "$0 -i interface [ -d basedir ] [ 'libpcap bpf' ]"
+    echo "$0 -i interface [ -d basedir ] [ -s snaplen ] [ 'libpcap bpf' ]"
 }
 
 # parse command line options
-while getopts d:i: options
+while getopts d:i:s: options
 do
     case ${options} in
         d)    PREFIX=${OPTARG}
               ;;
         i)    IFACE=${OPTARG}
+              ;;
+        s)    SNAPLEN=${OPTARG}
               ;;
         *)    usage
               exit 1
@@ -40,6 +42,9 @@ then
     usage
     exit 1
 fi
+
+# other options
+SNAPLEN=${SNAPLEN:-0}
 
 #  tcpdump regex (required).  Default to DNS over UDP answers.
 BPF=${1:-'src port 53 and udp[10:2]>>15 == 1'}
@@ -176,9 +181,9 @@ _RV=
 #       exits since tcpdump sends some messgaes to stderr by default.
 if [ x"${SUDO}" = x ]
 then
-    ${TCPDUMP} -qq -s1522 -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    ${TCPDUMP} -qq -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 else
-    ${SUDO} ${TCPDUMP} -qq -s1522 -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    ${SUDO} ${TCPDUMP} -qq -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 fi
 _RV=$?
 sleep 1
