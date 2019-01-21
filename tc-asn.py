@@ -47,10 +47,12 @@ def get_asn(addr):
         # parse each TXT line, extract one or more ASNs per line
         rdatatxt = rdata.strings
         for line in rdatatxt:
-            asnstr = re.compile('\s*|\s*').split(line)[0]
-            asnlist = asnstr.split()
+            asnstr = [x.strip() for x in line.split('|')]
+            asnlist = asnstr[0].split()
             asns.extend(asnlist)
 
+    # remove duplicate ASNs, then return the list
+    asns = list(set(asns))
     return asns
 
 # expect IP addrs, one per line
