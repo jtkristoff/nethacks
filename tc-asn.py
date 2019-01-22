@@ -45,6 +45,7 @@ def get_asn(addr):
         # parse each TXT line, extract one or more ASNs per line
         rdatatxt = rdata.strings
         for line in rdatatxt:
+            line = line.decode()
             asnstr = [x.strip() for x in line.split('|')]
             asnlist = asnstr[0].split()
             asns.update(asnlist)
