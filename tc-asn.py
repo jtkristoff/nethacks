@@ -37,7 +37,7 @@ def get_asn(addr):
         # TODO: send this to stderr, log, or use traceback.format_exc()
         return ['NA']
 
-    asns = []
+    asns = set()
     for rdata in answer:
         # https://www.cymru.com/jtk/blog/2010/08/10/#parsing-tcbgp-mapping
         #   "49152 [...] | 192.0.2.0/24 | AA | registry | 1970-01-01"
@@ -47,10 +47,8 @@ def get_asn(addr):
         for line in rdatatxt:
             asnstr = [x.strip() for x in line.split('|')]
             asnlist = asnstr[0].split()
-            asns.extend(asnlist)
+            asns.update(asnlist)
 
-    # remove duplicate ASNs, then return the list
-    asns = list(set(asns))
     return asns
 
 # expect IP addrs, one per line
