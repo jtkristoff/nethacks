@@ -46,8 +46,7 @@ def get_asn(addr):
         rdatatxt = rdata.strings
         for line in rdatatxt:
             line = line.decode()
-            asnstr = [x.strip() for x in line.split('|')]
-            asnlist = asnstr[0].split()
+            asnlist = line.split('|', 1)[0].split()
             asns.update(asnlist)
 
     return asns
