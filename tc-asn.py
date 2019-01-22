@@ -17,9 +17,7 @@ def get_ptr_name(addr):
     name = name.rsplit('.', 2)[0]
 
     # append v4 or v6 suffix depending on ip version
-    p = re.compile(':')    # an ipv6 addr has at least one colon
-    m = p.search(addr)
-    if m:
+    if ':' in addr:
         name += '.origin6.asn.cymru.com.'
     else:
         name += '.origin.asn.cymru.com.'
