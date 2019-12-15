@@ -11,3 +11,4 @@ Network tools and hacks
 * [pcapr.sh](pcapr.sh) capture traffic and write pcap files at regular intervals
 * [secure-junos-mcast.html](secure-junos-mcast.html) Lenny's Junos secure multicast template
 * [tc-asn.py](tc-asn.py) map IP addresses to origin ASN with Cymru's address mapping service
+* [v4rand-buckets.pl](v4rand-buckets.pl) randomize all IPv4 addresses into file buckets
