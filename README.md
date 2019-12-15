@@ -2,6 +2,7 @@
 
 Network tools and hacks
 
+* [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN and PTR name
 * [nobogons.pl](nobogons.pl) IPv4 address prefixes via STDIN, remove bogons, back to STDOUT
