@@ -5,7 +5,7 @@ Network tools and hacks
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN and PTR name
-* [nobogons.pl](nobogons.pl) IPv4 address prefixes via STDIN, remove bogons, back to STDOUT
+* [nobogons.pl](nobogons.pl) IPv4/IPv6 address prefixes via STDIN, remove bogons, back to STDOUT
 * [random-ipv4addrs.pl](random-ipv4addrs.pl) generates a random list of IPv4 addresses to STDOUT, 10 million by default
 * [random-ipv4addrs.py](random-ipv4addrs.py) rough, simpler equivalent of the Perl version
 * [randomize-lines.pl](randomize-lines.pl) randomize lines in a file
