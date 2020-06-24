@@ -3,6 +3,8 @@ use strict;
 use warnings;
 
 # decode the Juniper-specific syslog priority values
+#
+# https://www.juniper.net/documentation/en_US/junos/topics/reference/general/syslog-facilities-severity-levels.html
 
 $| = 1;
 
