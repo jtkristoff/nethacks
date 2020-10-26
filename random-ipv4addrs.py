@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import argparse, random, socket, struct
 
@@ -16,4 +16,4 @@ args = parser.parse_args()
 
 for i in range(0, args.c):
     randnum = int(random.random() * (2**32-1))
-    print long2ipv4addr(randnum)
+    print(long2ipv4addr(randnum))
