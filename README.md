@@ -8,6 +8,7 @@ Network tools and hacks
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN and PTR name
 * [nobogons.pl](nobogons.pl) IPv4/IPv6 address prefixes via STDIN, remove bogons, back to STDOUT
 * [priority-decode.pl](priority-decode.l) Juniper-specific syslog priority decoder
+* [random-ipv4addrs.go](random-ipv4addrs.go) Go implementation by Brett Lykins
 * [random-ipv4addrs.pl](random-ipv4addrs.pl) generates a random list of IPv4 addresses to STDOUT, 10 million by default
 * [random-ipv4addrs.py](random-ipv4addrs.py) rough, simpler equivalent of the Perl version
 * [randomize-lines.pl](randomize-lines.pl) randomize lines in a file
