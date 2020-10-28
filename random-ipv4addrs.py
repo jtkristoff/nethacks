@@ -9,5 +9,5 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-c', type=int, default=10000000)
 args = parser.parse_args()
 
-for i in range(0, args.c):
+for _ in range(0, args.c):
     print(socket.inet_ntoa(struct.pack("!L", getrandbits(32))))
