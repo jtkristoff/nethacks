@@ -52,7 +52,7 @@ for line in ripe_asn_txt:
         # skip if unexpected input
         continue
 
-    # make sure first field is a digit
+    # make sure first field is only digits
     if asn.isdigit() == False:
         continue
 
