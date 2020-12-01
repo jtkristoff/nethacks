@@ -24,7 +24,7 @@ args = parser.parse_args()
 try:
     asndb = pyasn.pyasn(args.a)
 except:
-    sys.stderr.write("Failed to import PyAS .dat file: %s\n" % (args.a))
+    sys.stderr.write("Failed to import pyasn .dat file: %s\n" % (args.a))
     sys.exit(1)
 
 # open https://ftp.ripe.net/ripe/asnames/asn.txt for reading
