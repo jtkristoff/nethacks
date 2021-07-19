@@ -107,6 +107,7 @@ sub import_bogons {
         chomp $line;
         $line =~ s{ \A \s* }{}xms;
         $line =~ s{ \s* \z }{}xms;
+        $line =~ s{ \s* [#] .* \z }{}xms;
 
         # skip blank lines or comments
         next if $line =~ m{ \A \s* (?: [#] .* )? \z }xms;
