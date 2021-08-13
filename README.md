@@ -3,6 +3,7 @@
 Network tools and hacks
 
 * [bind-query-report.pl](bind-query-report.pl) BIND query log report
+* [compactaddrs.pl](compactaddrs.pl) aggregates contiguous IPv4/IPv6 addresses into prefixes
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN and PTR name
