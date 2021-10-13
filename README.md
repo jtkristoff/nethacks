@@ -2,6 +2,7 @@
 
 Network tools and hacks
 
+* [asnames.sh](asnames.sh) fetch ASN to AS name mapping file from RIPE
 * [bind-query-report.pl](bind-query-report.pl) BIND query log report
 * [compactaddrs.pl](compactaddrs.pl) aggregates contiguous IPv4/IPv6 addresses into prefixes
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
@@ -13,6 +14,7 @@ Network tools and hacks
 * [random-ipv4addrs.pl](random-ipv4addrs.pl) generates a random list of IPv4 addresses to STDOUT, 10 million by default
 * [random-ipv4addrs.py](random-ipv4addrs.py) rough, simpler equivalent of the Perl version
 * [randomize-lines.pl](randomize-lines.pl) randomize lines in a file
+* [refresh-pyasn-dat.sh](refresh-pyasn-dat.sh) fetch latest RIB data for PyASN
 * [pcapr.sh](pcapr.sh) capture traffic and write pcap files at regular intervals
 * [pcapsum.pl](pcapsump.pl) libpcap packet summarization tool
 * [prr-asn.py](prr-asn.py) map IP addresses to origin ASN with pyasn and RIPE's asn.txt
