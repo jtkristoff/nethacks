@@ -1,0 +1,30 @@
+--- pyasn_util_download.py      2021-10-13 15:59:55.763801164 +0000
++++ jtk.pyasn_util_download.py  2021-10-13 15:59:49.995239447 +0000
+@@ -54,7 +54,7 @@ group.add_argument('--dates-from-file',
+ args = parser.parse_args()
+ 
+ 
+-def ftp_download(server, remote_dir, remote_file, local_file, print_progress=True):
++def ftp_download(server, remote_dir, remote_file, local_file, print_progress=False):
+     """Downloads a file from an FTP server and stores it locally"""
+     ftp = FTP(server)
+     ftp.login()
+@@ -79,7 +79,7 @@ def ftp_download(server, remote_dir, rem
+         print('\nDownload complete.')
+ 
+ 
+-def find_latest_in_ftp(server, archive_root, sub_dir, print_progress=True):
++def find_latest_in_ftp(server, archive_root, sub_dir, print_progress=False):
+     """Returns (server, filepath, filename) for the most recent file in an FTP archive"""
+     if print_progress:
+         print('Connecting to ftp://' + server)
+@@ -124,7 +124,8 @@ if args.latestv4 or args.latestv6 or arg
+     # Download latest RouteViews MRT/RIB archive
+     srvr, rp, fn = find_latest_routeviews(4 if args.latestv4 else 6 if args.latestv6 else '46')
+     ftp_download(srvr, rp, fn, fn)
+-
++    # 2020-11-16,jtk: output local file name fetch for easy parsing
++    print("%s" % fn)
+ 
+ if args.dates_from_file:
+     # read dates from a local file and use wget to download range
