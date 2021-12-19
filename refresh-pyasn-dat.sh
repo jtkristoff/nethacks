@@ -38,8 +38,9 @@ fi
 # downloads to current directory
 cd ${DATADIR}/${YYYYMM}
 
-# spits out filename to stdout
-RIB_FILE=`${DOWNLOAD} ${DOWNLOAD_ARGS}`
+# get filename from stdout message of form:
+#  Downloading ftp://archive.routeviews.org/route-views4/YYYY.MM/RIBS/rib.YYYYMMDD.HHMM.bz
+RIB_FILE=`${DOWNLOAD} ${DOWNLOAD_ARGS} | grep Downloading | awk '{print $2}' | xargs basename`
 if [ $? -ne 0 ]
 then
     fatal "failed to download: ${DOWNLOAD}  ${DOWNLOAD_ARGS}"
