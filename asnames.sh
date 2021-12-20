@@ -9,7 +9,7 @@
 # set group permissions
 umask 022
 
-WORKDIR=${HOME}/data/asnames
+WORKDIR=${HOME}/opt/asnames
 DSTDIR=${HOME}/etc
 DST_ASNAMES=${DSTDIR}/asnames.txt
 SRC_ASNAMES=https://ftp.ripe.net/ripe/asnames/asn.txt

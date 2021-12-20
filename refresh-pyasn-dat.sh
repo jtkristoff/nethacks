@@ -12,7 +12,7 @@
 # uncomment for debugging
 #set -x
 
-DATADIR=${HOME}/data/pyasn
+DATADIR=${HOME}/opt/pyasn
 DOWNLOAD=~/.local/bin/pyasn_util_download.py
 DOWNLOAD_ARGS="--latestv46"
 CONVERT=~/.local/bin/pyasn_util_convert.py
