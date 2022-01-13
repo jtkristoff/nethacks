@@ -181,9 +181,9 @@ _RV=
 #       exits since tcpdump sends some messgaes to stderr by default.
 if [ x"${SUDO}" = x ]
 then
-    ${TCPDUMP} -qq -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    ${TCPDUMP} -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 else
-    ${SUDO} ${TCPDUMP} -qq -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    ${SUDO} ${TCPDUMP} -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 fi
 _RV=$?
 sleep 1
