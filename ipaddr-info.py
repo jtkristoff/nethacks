@@ -1,55 +1,16 @@
 #!/usr/bin/env python3
 
+import argparse
 import dns.resolver
 import dns.reversename
 import fileinput
+import pyasn
+import re
 import sys
 
-def get_tc_ptr_name(addr):
-    """
-    Return a Cymru BGP lookup PTR name given an IPv4 or IPv6 address
-    """
-
-    # use library to get reverse name
-    name = dns.reversename.from_address(addr).to_text(omit_final_dot=True)
-    # remove in-addr.arpa or ip6.arpa suffix
-    name = name.rsplit('.', 2)[0]
-
-    # append v4 or v6 suffix depending on ip version
-    if ':' in addr:
-        name += '.origin6.asn.cymru.com.'
-    else:
-        name += '.origin.asn.cymru.com.'
-
-    return name
-
-def get_asn(addr):
-    """
-    Return comma-delimited string of origin ASNs given an IPv4 or IPv6 address
-    """
-
-    qname = get_tc_ptr_name(addr)
-
-    try:
-        answer = dns.resolver.query(qname, rdtype='TXT', rdclass='IN')
-    except:
-        # TODO: send this to stderr, log, or use traceback.format_exc()
-        return 'NA'
-
-    asns = set()
-    for rdata in answer:
-        # https://www.cymru.com/jtk/blog/2010/08/10/#parsing-tcbgp-mapping
-        #   "49152 [...] | 192.0.2.0/24 | AA | registry | 1970-01-01"
-        #   [...]
-        # parse each TXT line, extract one or more ASNs per line
-        rdatatxt = rdata.strings
-        for line in rdatatxt:
-            line = line.decode()
-            asnlist = line.split('|', 1)[0].split()
-            asns.update(asnlist)
-
-    # remove duplicate ASNs
-    return ','.join(asns)
+# init mapping tables and run-time caches
+asnames   = {}
+ptr_cache = {}
 
 def ptr_answer(addr):
     """
@@ -59,20 +20,90 @@ def ptr_answer(addr):
     qname = dns.reversename.from_address(addr)
     try:
         # only gets one answer, probably good enough for our purposes
-        answer = str(dns.resolver.query(qname, "PTR")[0])
+        answer = str(dns.resolver.resolve(qname, "PTR")[0])
     except:
         return 'NA'
 
     return answer
 
-for line in fileinput.input():
-    ipaddr = line.rstrip()
-    asn = get_asn(ipaddr)
-    rdata = ptr_answer(ipaddr)
+parser = argparse.ArgumentParser()
+parser.add_argument('-a', default='/etc/pyasn.dat')  # pyasn .dat file
+parser.add_argument('-n', default='/etc/asn.txt')    # RIPE asn.txt file
+parser.add_argument('-i')   # IP address argument, otherwise read stdin
+args = parser.parse_args()
 
-    if ':' in ipaddr:
-        sys.stdout.write("%-37s  |  %10s  |  %s\n" % (ipaddr,asn,rdata))
+# Expects https://pypi.org/project/pyasn/ module formatted .dat file
+try:
+    asndb = pyasn.pyasn(args.a)
+except:
+    sys.stderr.write("Failed to import pyasn .dat file: %s\n" % (args.a))
+    sys.exit(1)
+
+# Expects a local copy of https://ftp.ripe.net/ripe/asnames/asn.txt
+try:
+    ripe_asn_txt = open(args.n, 'r')
+except:
+    sys.stderr.write('Unable to open %s for reading\n' % (args.n))
+    sys.exit(1)
+
+# build the ASN to AS name mapping dictionary
+for line in ripe_asn_txt:
+    # remove trailing country code field, e.g. ", CC"
+    line = re.sub( r",\s+[A-Z]{2}\Z", "", line.strip() )
+
+    # skip if string is empty
+    if not line:
+        continue
+
+    try:
+        # split on the first whitespace
+        asn, name = line.split(None, 1)
+    except:
+        # skip if unexpected input
+        continue
+
+    # make sure first field is only digits
+    if asn.isdigit() == False:
+        continue
+
+    # create dictionary entry, limit AS name to 30 chars
+    asnames[int(asn)] = name[:30]
+ripe_asn_txt.close()
+
+def addrinfo(ipaddr):
+    asmap = asndb.lookup(ipaddr)
+    if asmap[0] == None:
+        asn = "NA"
+        prefix = "NA"
+        asname = "NA"
     else:
-        sys.stdout.write("%-15s  |  %10s  |  %s\n" % (ipaddr,asn,rdata))
+        asn = asmap[0]
+        prefix = asmap[1]
+        try:
+            asname = asnames[asn]
+        except:
+            asname = "NA"
+    try:
+        rdata = ptr_cache[ipaddr]
+    except:
+        rdata = ptr_answer(ipaddr)
+        ptr_cache[ipaddr] = rdata
+    return prefix, asn, asname, rdata 
 
-sys.exit(0)
+def writeinfo(ipaddr, prefix, asn, asname, rdata):
+    if ':' in ipaddr:
+        sys.stdout.write("%-37s  |  %-s  |  %6s  |  %s  |  %s\n"
+            % (ipaddr,prefix,asn,asname,rdata))
+    else:
+        sys.stdout.write("%-15s  |  %-s  |  %6s  |  %s  |  %s\n"
+            % (ipaddr,prefix,asn,asname,rdata))
+    return
+
+if args.i:
+    prefix, asn, asname, rdata = addrinfo(args.i)
+    writeinfo(args.i, prefix, asn, asname, rdata)
+else:
+    for line in fileinput.input():
+        ipaddr = line.rstrip()
+        prefix, asn, asname, rdata = addrinfo(ipaddr)
+        writeinfo(ipaddr, prefix, asn, asname, rdata)

@@ -7,7 +7,8 @@ Network tools and hacks
 * [compactaddrs.pl](compactaddrs.pl) aggregates contiguous IPv4/IPv6 addresses into prefixes
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
-* [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN and PTR name
+* [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN with PTR name
+* [ipaddr-info-tc.py](ipaddr-info-tc.py) map IP addressesto BGP ASN with PTR name (TC remote lookup version)
 * [nobogons.pl](nobogons.pl) IPv4/IPv6 address prefixes via STDIN, remove bogons, back to STDOUT
 * [priority-decode.pl](priority-decode.l) Juniper-specific syslog priority decoder
 * [random-ipv4addrs.go](random-ipv4addrs.go) Go implementation by Brett Lykins
