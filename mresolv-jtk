@@ -85,6 +85,8 @@ my $type = $opt_T || 'A';
 my $sel = IO::Select->new;
 my $eof = 0;
 
+print "question,name,class,type,ttl,data\n";
+
 while (1) {
         my $name;
         my $sock;
@@ -133,7 +135,6 @@ while (1) {
                         next unless $ans;
                         my $rr;
                         my ($question) = $ans->question;
-                        print "question,name,class,type,ttl,data\n";
                         foreach $rr ($ans->answer) {
                                 my $csv_rr = join( ',', $question->name, $rr->owner, $rr->class, $rr->type, $rr->ttl, $rr->rdstring );
                                 print "$csv_rr\n";
