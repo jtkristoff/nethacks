@@ -1,0 +1,166 @@
+#!/usr/bin/perl -wT
+
+# Adapted from mresolv from Net::DNS
+
+# Changes by jtk@dataplane.org, 2022-04-23
+# + optional resolver (-r)
+# + optional type (-T), A is default
+# + modified CSV output
+
+=head1 NAME
+
+mresolv-jtk - Perform multiple DNS lookups in parallel
+
+=head1 SYNOPSIS
+
+B<mresolv-jtk> S<[ B<-d> ]> S<[ B<-n> I<number> ]> S<[ B<-t> I<timeout> ]>
+S<[ B<-s> I<resolver-address> ]> S<[ B<-T> I<type> ]> S<[ I<filename>... ]>
+
+=head1 DESCRIPTION
+
+B<mresolv-jtk> performs multiple DNS lookups in parallel.  Names to query
+are read from the list of files given on the command line, or from the
+standard input.  Question name and RRs in answer sets are output in CSV.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-d>
+
+Turn on debugging output.
+
+=item B<-n> I<number>
+
+Set the number of queries to have outstanding at any time.
+
+=item B<-t> I<timeout>
+
+Set the timeout in seconds.  If no replies are received for this
+amount of time, all outstanding queries will be flushed and new
+names will be read from the input stream.
+
+=item <B><-s> I<resolver-address>
+
+Set the resolver address to use.
+
+=item <B><-T> I<type>
+
+Set the query type.  Valid types per Net::DNS.  Default type is an
+A RR query.
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (c) 1997-2000 Michael Fuhr.  All rights reserved.  This
+program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+Minor modifications by John Kristoff.
+
+=head1 SEE ALSO
+
+L<perl(1)>, L<axfr>, L<check_soa>, L<check_zone>, L<mx>, L<perldig>,
+L<Net::DNS>
+
+=cut
+
+use Net::DNS;
+use IO::Select;
+use Getopt::Std;
+use strict;
+use vars qw($opt_d $opt_n $opt_t $opt_s $opt_T);
+
+$| = 1;
+
+$opt_n = 32;    # number of requests to have outstanding at any time
+$opt_t = 15;    # timeout (seconds)
+
+getopts("dn:s:t:T:");
+
+my $res = Net::DNS::Resolver->new;
+$res->nameservers($opt_s) if $opt_s;
+my $type = $opt_T || 'A';
+my $sel = IO::Select->new;
+my $eof = 0;
+
+while (1) {
+        my $name;
+        my $sock;
+
+        #----------------------------------------------------------------------
+        # Read names until we've filled our quota of outstanding requests.
+        #----------------------------------------------------------------------
+
+        while (!$eof && $sel->count < $opt_n) {
+                print "DEBUG: reading..." if defined $opt_d;
+                $name = <>;
+                unless ($name) {
+                        print "EOF.\n" if defined $opt_d;
+                        $eof = 1;
+                        last;
+                }
+                chomp $name;
+                $sock = $res->bgsend($name, $type);
+                $sel->add($sock);
+                print "name = $name, outstanding = ", $sel->count, "\n"
+                        if defined $opt_d;
+        }
+
+        #----------------------------------------------------------------------
+        # Wait for any replies.  Remove any replies from the outstanding pool.
+        #----------------------------------------------------------------------
+
+        my @ready;
+        my $timed_out = 1;
+
+        print "DEBUG: waiting for replies\n" if defined $opt_d;
+
+        for (@ready = $sel->can_read($opt_t);
+             @ready;
+             @ready = $sel->can_read(0)) {
+
+                $timed_out = 0;
+
+                print "DEBUG: replies received: ", scalar @ready, "\n"
+                        if defined $opt_d;
+
+                foreach $sock (@ready) {
+                        print "DEBUG: handling a reply\n" if defined $opt_d;
+                        $sel->remove($sock);
+                        my $ans = $res->bgread($sock);
+                        next unless $ans;
+                        my $rr;
+                        my ($question) = $ans->question;
+                        print "question,name,class,type,ttl,data\n";
+                        foreach $rr ($ans->answer) {
+                                my $csv_rr = join( ',', $question->name, $rr->owner, $rr->class, $rr->type, $rr->ttl, $rr->rdstring );
+                                print "$csv_rr\n";
+                        }
+                }
+        }
+
+        #----------------------------------------------------------------------
+        # If we timed out waiting for replies, remove all entries from the
+        # outstanding pool.
+        #----------------------------------------------------------------------
+
+        if ($timed_out) {
+                print "DEBUG: timeout: clearing the outstanding pool.\n"
+                        if defined $opt_d;
+                my $sock;
+                foreach $sock ($sel->handles) {
+                        $sel->remove($sock);
+                }
+        }
+
+        print "DEBUG: outstanding = ", $sel->count, ", eof = $eof\n"
+                if defined $opt_d;
+
+        #----------------------------------------------------------------------
+        # We're done if there are no outstanding queries and we've read EOF.
+        #----------------------------------------------------------------------
+
+        last if ($sel->count == 0) && $eof;
+}
