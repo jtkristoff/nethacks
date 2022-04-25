@@ -9,7 +9,7 @@ Network tools and hacks
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN with PTR name
 * [ipaddr-info-tc.py](ipaddr-info-tc.py) map IP addressesto BGP ASN with PTR name (TC remote lookup version)
-* [mresolv-jtk.pl](mresolv-jtk.py) fork of Net::DNS demo/mresolv, see code for changes
+* [mresolv-jtk.pl](mresolv-jtk.pl) fork of Net::DNS demo/mresolv, see code for changes
 * [nobogons.pl](nobogons.pl) IPv4/IPv6 address prefixes via STDIN, remove bogons, back to STDOUT
 * [priority-decode.pl](priority-decode.l) Juniper-specific syslog priority decoder
 * [random-ipv4addrs.go](random-ipv4addrs.go) Go implementation by Brett Lykins
@@ -24,9 +24,3 @@ Network tools and hacks
 * [tc-asn.pl](tc-asn.pl) map IP addresses to origin ASN with Cymru's address mapping service (original Perl version)
 * [tc-asn.py](tc-asn.py) map IP addresses to origin ASN with Cymru's address mapping service (Python version)
 * [v4rand-buckets.pl](v4rand-buckets.pl) randomize all IPv4 addresses into file buckets
-
-To apply the pyasn_util_download.py patch:
-```
-cd ~/.local/bin
-patch -p1 pyasn_util_download.py < pyasn_util_download.py.patch
-```
