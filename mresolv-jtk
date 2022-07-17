@@ -3,7 +3,7 @@
 # Adapted from mresolv from Net::DNS
 
 # Changes by jtk@dataplane.org, 2022-04-23
-# + optional resolver (-r)
+# + optional resolver (-s)
 # + optional type (-T), A is default
 # + modified CSV output
 
