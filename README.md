@@ -8,6 +8,7 @@
 * [csv2json.py](csv2json.py) converts CSV (header required) to compact JSON
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
 * [gpg-ring-check.sh](gpg-ring-check.sh) examine a GnuPG public key ring for expiring, expired, revoked keys
+* [geolocip.py](geolocip.py) map IP addresses to MaxMind geolocation
 * [ipaddr-info.py](ipaddr-info.py) map IP addresses to BGP ASN with PTR name
 * [ipaddr-info-tc.py](ipaddr-info-tc.py) map IP addressesto BGP ASN with PTR name (TC remote lookup version)
 * [mresolv-jtk](mresolv-jtk) fork of Net::DNS demo/mresolv, see code for changes
