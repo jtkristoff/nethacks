@@ -13,7 +13,7 @@
 * [ipaddr-info-tc.py](ipaddr-info-tc.py) map IP addressesto BGP ASN with PTR name (TC remote lookup version)
 * [mresolv-jtk](mresolv-jtk) fork of Net::DNS demo/mresolv, see code for changes
 * [nobogons.pl](nobogons.pl) IPv4/IPv6 address prefixes via STDIN, remove bogons, back to STDOUT
-* [priority-decode.pl](priority-decode.l) Juniper-specific syslog priority decoder
+* [priority-decode.pl](priority-decode.pl) Juniper-specific syslog priority decoder
 * [random-ipv4addrs.go](random-ipv4addrs.go) Go implementation by Brett Lykins
 * [random-ipv4addrs.pl](random-ipv4addrs.pl) generates a random list of IPv4 addresses to STDOUT, 10 million by default
 * [random-ipv4addrs.py](random-ipv4addrs.py) rough, simpler equivalent of the Perl version
