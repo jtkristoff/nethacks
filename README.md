@@ -20,7 +20,7 @@
 * [randomize-lines.pl](randomize-lines.pl) randomize lines in a file
 * [refresh-pyasn-dat.sh](refresh-pyasn-dat.sh) fetch latest RIB data for PyASN
 * [pcapr.sh](pcapr.sh) capture traffic and write pcap files at regular intervals
-* [pcapsum.pl](pcapsump.pl) libpcap packet summarization tool
+* [pcapsum.pl](pcapsum.pl) libpcap packet summarization tool
 * [prr-asn.py](prr-asn.py) map IP addresses to origin ASN with pyasn and RIPE's asn.txt
 * [secure-junos-mcast.html](secure-junos-mcast.html) Lenny's Junos secure multicast template
 * [tc-asn.pl](tc-asn.pl) map IP addresses to origin ASN with Cymru's address mapping service (original Perl version)
