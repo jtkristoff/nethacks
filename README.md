@@ -4,6 +4,7 @@
 
 * [asnames.sh](asnames.sh) fetch ASN to AS name mapping file from RIPE
 * [bind-query-report.pl](bind-query-report.pl) BIND query log report
+* [bogons.sh](bogons.sh) Overly elaborate script to help automate fetching TC full bogon lists
 * [compactaddrs.pl](compactaddrs.pl) aggregates contiguous IPv4/IPv6 addresses into prefixes
 * [csv2json.py](csv2json.py) converts CSV (header required) to compact JSON
 * [enumerate-cidr.pl](enumerate-cidr.pl) enumerate all IP addresses in a CIDR prefix
