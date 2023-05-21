@@ -19,6 +19,19 @@ usage() {
     echo "$0 -i interface [ -d basedir ] [ -s snaplen ] [ 'libpcap bpf' ]"
 }
 
+# abnormal event subroutines, pass custom message as first param
+# Avoid changing.  (required)
+DEFAULT_ERROR='Unknown error'
+DEFAULT_WARNING='Unknowning warning'
+#
+warning() {
+    echo ${1:-${DEFAULT_WARNING}} >&2
+}
+error() {
+    echo ${1:-${DEFAULT_ERROR}} >&2 
+    exit 1
+}
+
 # parse command line options
 while getopts d:i:s: options
 do
@@ -64,8 +77,10 @@ SPLIT_PIDFILE=${WORKDIR}/split.pid
 # we will adjust this if passed an iface option on the command line
 TCPDUMP_PIDFILE=${WORKDIR}/tcpdump.pid
 #
-#  This should work for most installations. (required)
-TCPDUMP=/usr/sbin/tcpdump
+#  XXX: tcpdump may be in /usr/bin or /usr/sbin, just trust the path
+#  This should work for most installations.(required)
+command -v tcpdump || error "tcpdump not found"
+TCPDUMP=tcpdump
 #
 #  get pcap-split @ https://github.com/wessels/pcap-tools (required)
 #
@@ -86,10 +101,6 @@ INTERVAL=900
 # After how many days should we purge old pcap files? (required)
 PURGE_DAYS=7
 #
-# Avoid changing.  (required)
-DEFAULT_ERROR='Unknown error'
-DEFAULT_WARNING='Unknowning warning'
-#
 #  Uncomment and set the path if you run tcpdump with sudo (optional)
 #SUDO=/usr/bin/sudo
 #
@@ -106,15 +117,6 @@ export TZ
 
 #  Set group permissions.  Generally want group write.
 umask 002
-
-# abnormal event subroutines, pass custom message as first param
-warning() {
-    echo ${1:-${DEFAULT_WARNING}} >&2
-}
-error() {
-    echo ${1:-${DEFAULT_ERROR}} >&2 
-    exit 1
-}
 
 # quit if we are disabled
 if test -r ${DISABLED}
