@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -T
 
 # Adapted from mresolv from Net::DNS
 
@@ -6,6 +6,9 @@
 # + optional resolver (-s)
 # + optional type (-T), A is default
 # + modified CSV output
+# Changes by jtk@dataplane.org, 2024-02-27
+# + fixed doc typos
+# + enabled warnings and taint mode
 
 =head1 NAME
 
@@ -40,11 +43,11 @@ Set the timeout in seconds.  If no replies are received for this
 amount of time, all outstanding queries will be flushed and new
 names will be read from the input stream.
 
-=item <B><-s> I<resolver-address>
+=item B<-s> I<resolver-address>
 
 Set the resolver address to use.
 
-=item <B><-T> I<type>
+=item B<-T> I<type>
 
 Set the query type.  Valid types per Net::DNS.  Default type is an
 A RR query.
@@ -70,6 +73,7 @@ use Net::DNS;
 use IO::Select;
 use Getopt::Std;
 use strict;
+use warnings;
 use vars qw($opt_d $opt_n $opt_t $opt_s $opt_T);
 
 $| = 1;
@@ -104,6 +108,9 @@ while (1) {
                         last;
                 }
                 chomp $name;
+##TMP:
+                print "$name\n" if defined $opt_d;
+##
                 $sock = $res->bgsend($name, $type);
                 $sel->add($sock);
                 print "name = $name, outstanding = ", $sel->count, "\n"
