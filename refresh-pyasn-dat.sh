@@ -13,9 +13,9 @@
 #set -x
 
 DATADIR=${HOME}/opt/pyasn
-DOWNLOAD=~/.local/bin/pyasn_util_download.py
+DOWNLOAD=pyasn_util_download.py
 DOWNLOAD_ARGS="--latestv46"
-CONVERT=~/.local/bin/pyasn_util_convert.py
+CONVERT=pyasn_util_convert.py
 CONVERT_ARGS="--no-progress"
 YYYYMM=`date +%Y%m`
 
