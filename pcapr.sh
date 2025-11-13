@@ -90,10 +90,7 @@ SPLIT=/usr/local/bin/pcap-split
 #  to a command at the end of an interval.  If not using bash, you
 #  will may need to write a script that will move the file passed to
 #  it to ${PCAPDIR}.  (required)
-POST_SPLIT_CMD="/bin/mv --target-directory ${PCAPDIR}"
-#
-#  gzip in Linux tends to be in /bin, BSD in /usr/bin.  (required)
-GZIP=/bin/gzip
+POST_SPLIT_CMD="mv --target-directory ${PCAPDIR}"
 #
 #  pcap-split interval. Avoid changing. (required)
 INTERVAL=900
