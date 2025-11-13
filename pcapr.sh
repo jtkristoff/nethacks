@@ -32,8 +32,9 @@ error() {
     exit 1
 }
 
+USE_SUDO=
 # parse command line options
-while getopts d:i:s: options
+while getopts d:i:s:S options
 do
     case ${options} in
         d)    PREFIX=${OPTARG}
@@ -42,6 +43,8 @@ do
               ;;
         s)    SNAPLEN=${OPTARG}
               ;;
+	S)    USE_SUDO=1
+	      ;;
         *)    usage
               exit 1
               ;;
@@ -76,31 +79,27 @@ SPLIT_FILE=${TMPDIR}/%Y%m%d%H%M-${IFACE}.pcap
 SPLIT_PIDFILE=${WORKDIR}/split.pid
 # we will adjust this if passed an iface option on the command line
 TCPDUMP_PIDFILE=${WORKDIR}/tcpdump.pid
-#
+
 #  XXX: tcpdump may be in /usr/bin or /usr/sbin, just trust the path
 #  This should work for most installations.(required)
 command -v tcpdump || error "tcpdump not found"
-TCPDUMP=tcpdump
-#
+
 #  get pcap-split @ https://github.com/wessels/pcap-tools (required)
 #
 SPLIT=/usr/local/bin/pcap-split
-#
+
 #  pcap-split will pass a completed pcap file name as an argument
 #  to a command at the end of an interval.  If not using bash, you
 #  will may need to write a script that will move the file passed to
 #  it to ${PCAPDIR}.  (required)
 POST_SPLIT_CMD="mv --target-directory ${PCAPDIR}"
-#
+
 #  pcap-split interval. Avoid changing. (required)
 INTERVAL=900
-#
+
 # After how many days should we purge old pcap files? (required)
 PURGE_DAYS=7
-#
-#  Uncomment and set the path if you run tcpdump with sudo (optional)
-#SUDO=/usr/bin/sudo
-#
+
 #  Under SELinux RBAC commands in sudo are invoked sesh.  This alters
 #  how the process appears to the sudo user.  This is only common if
 #  you are using RBAC commands and running under CentOS/RedHat
@@ -178,11 +177,11 @@ _RV=
 #       not interfere with ordinary releases of tcpdump, but you will
 #       probably get extraneous messages from crontab when the script
 #       exits since tcpdump sends some messgaes to stderr by default.
-if [ x"${SUDO}" = x ]
+if [ x"${USE_SUDO}" = x ]
 then
-    ${TCPDUMP} -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    tcpdump -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 else
-    ${SUDO} ${TCPDUMP} -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
+    sudo tcpdump -qq -U -s ${SNAPLEN} -Z ${RUNAS} -w- -i ${IFACE} ${BPF} > ${FIFO} &
 fi
 _RV=$?
 sleep 1
